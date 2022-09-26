@@ -30,6 +30,10 @@
             "name": "[variables('NSGName')]",
             "location": "[variables('location')]",
             "properties": {
+                "orchestratorProfile": {
+                   "kubernetesConfig": {
+                     "networkPolicy": "calico",
+                     "networkPlugin": "azure"
                 "securityRules": [
                     {
                         "name": "ssh_rule",
