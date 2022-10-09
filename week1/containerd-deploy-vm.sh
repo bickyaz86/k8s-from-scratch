@@ -1,6 +1,6 @@
 # set env variables
 resourceGroupName="containerd-rg"
-location="southcentralus"
+location="CentralIndia"
 deploymentName="vm-deploy"
 
 # download template
