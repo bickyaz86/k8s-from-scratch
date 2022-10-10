@@ -1,11 +1,15 @@
-# add k8s repository GPG key
-curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add
-
-# add k8s repository
-sudo apt-add-repository "deb http://apt.kubernetes.io/ kubernetes-xenial main"
-
-# install kubelet, kubeadm and kubectl
-sudo apt-get install -y kubelet=1.20.2-00 kubeadm=1.20.2-00 kubectl=1.20.2-00
+# Install kubeadm,kubelet & Kubectl
+   # 1. Update the apt package index and install packages needed to use the Kubernetes apt repository:
+	          sudo apt-get update
+            sudo apt-get install -y apt-transport-https ca-certificates curl
+	 # 2. Download the Google Cloud public signing key:
+	          sudo curl -fsSLo /usr/share/keyrings/kubernetes-archive-keyring.gpg https://packages.cloud.google.com/apt/doc/apt-key.gpg
+	 # 3. Add the Kubernetes apt repository:
+	          echo "deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list
+   # 4.Update apt package index, install kubelet, kubeadm and kubectl, and pin their version:
+            sudo apt-get update
+            sudo apt-get install -y kubelet kubeadm kubectl
+            sudo apt-mark hold kubelet kubeadm kubectl
 
 # enable bridge networking
 sudo vi /etc/sysctl.conf
@@ -38,8 +42,8 @@ mkdir -p $HOME/.kube
 sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
 sudo chown $(id -u):$(id -g) $HOME/.kube/config
 
-# install flannel 
-kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml
+# install calico
+kubectl apply -f https://raw.githubusercontent.com/projectcalico/calico/v3.24.1/manifests/calicoctl.yaml
 
 # view the taints
 kubectl get nodes -o=custom-columns=NODE:.metadata.name,KEY:.spec.taints[*].key,VALUE:.spec.taints[*].value,EFFECT:.spec.taints[*].effect
